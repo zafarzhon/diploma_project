@@ -1,0 +1,141 @@
+<block xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" th:href="@{/}">Primestore</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li
+                            class="nav-item"><a th:href="@{/}" class="nav-link active" aria-current="page"
+                    >Главная</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">О нас</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">Каталог</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" th:href="@{/only-smartphones}">Смартфоны</a></li>
+                            <li><a class="dropdown-item" th:href="@{/only-laptops}">Ноутбуки</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!--                &lt;!&ndash; Кнопка поиска &ndash;&gt;-->
+                <!--                <form class="d-flex me-3">-->
+                <!--                    <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">-->
+                <!--                    <button class="btn btn-outline-dark" type="submit">Найти</button>-->
+                <!--                </form>-->
+
+
+                <!-- Кнопка мои заказы -->
+                <a th:href="@{/order/history}" class="btn btn-outline-dark me-3">
+                    <i class="bi-bag-fill"></i> Мои заказы
+                </a>
+                <!-- Корзина -->
+                <button class="btn btn-outline-dark btn-cart" type="button" data-bs-toggle="modal"
+                        data-bs-target="#cartModal">
+                    <i class="bi-cart-fill me-1"></i>
+                    Корзина
+                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                </button>
+
+                <!-- Если пользователь не авторизован -->
+                <div sec:authorize="!isAuthenticated()">
+                    <!-- Кнопка войти с модальным окном -->
+                    <button class="btn btn-outline-dark me-3" type="button" data-bs-toggle="modal"
+                            data-bs-target="#loginModal">
+                        <i class="bi-person-fill"></i> Войти
+                    </button>
+                </div>
+
+                <!-- Если пользователь авторизован -->
+                <div sec:authorize="isAuthenticated()">
+                    <!-- Выпадающее меню -->
+                    <div class="dropdown">
+                        <!-- Кнопка-активатор выпадающего меню -->
+                        <a
+                                class="btn btn-outline-dark dropdown-toggle me-3"
+                                id="dropdownMenuButton"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="bi-person-fill"></i>
+                            <span th:text="${currentCustomer.login}"></span>
+                        </a>
+                        <!-- Содержимое выпадающего меню -->
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <!-- Баланс -->
+                            <li>
+                <span class="dropdown-item-text">
+                    <a th:href="@{/add-money}">
+                        <span th:text="${'Баланс: '+currentCustomer.balance+' ₽'}"></span>
+                    </a>
+
+                </span>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <!-- Кнопка выхода -->
+                            <li>
+                                <form th:action="@{/log-out}" method="get">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi-box-arrow-right"></i> Выйти
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+    <!-- Модальное окно корзины -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Моя корзина</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cartItemsContainer">
+                        <!-- Список товаров в корзине будет генерироваться динамически -->
+                    </div>
+                </div>
+                <form id="orderForm" method="get" th:action="@{/order/make}" class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">Оформить заказ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Модальное окно для входа -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Вход</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" th:action="@{/log-in}">
+                        <div class="mb-3">
+                            <label for="login" class="form-label">Логин</label>
+                            <input type="text" name="login" class="form-control" id="login" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Пароль</label>
+                            <input type="password" name="password" class="form-control" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Войти</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

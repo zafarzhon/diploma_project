@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/head}"></div>
+<body>
+<div th:replace="~{fragments/header}"></div>
+
+<!-- Основной контент -->
+<main>
+    <!-- Заголовок -->
+    <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Покупайте с комфортом</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Шаблон главной страницы интернет-магазина</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Раздел каталога -->
+    <div class="container mt-5 text-center main">
+        <h2>Категории</h2>
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-3 mb-4">
+                <a th:href="@{/only-smartphones}" class="text-decoration-none">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Смартфоны">
+                        <div class="card-body">
+                            <p class="card-text">Смартфоны</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 mb-4">
+                <a th:href="@{/only-laptops}" class="text-decoration-none">
+                    <div class="card text-center">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Ноутбуки">
+                        <div class="card-body">
+                            <p class="card-text">Ноутбуки</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

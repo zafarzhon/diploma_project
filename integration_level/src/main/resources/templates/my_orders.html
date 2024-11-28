@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/head}"></div>
+<body>
+<div th:replace="~{fragments/header}"></div>
+
+<div class="container main">
+    <div th:each="order : ${orders}" class="mb-4">
+        <div class="mb-3 fs-3">
+            <span th:text="${'Заказ от '+order.getCreatedAt()}"
+            ></span>
+            <th:block th:switch="${order.status.name()}">
+                <span class="text-success" th:case="'COMPLETED'">
+                    Завершен
+                </span>
+                <span class="text-info" th:case="'IN_PROGRESS'">
+                    Процессе
+                </span>
+                <span class="text-warning" th:case="'PICKUP_READY'">
+                    Готов к выдаче
+                </span>
+            </th:block>
+        </div>
+
+        <!-- Список продуктов -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+            <div th:each="product: ${order.getProductInfoOrders()}" class="col d-flex align-items-center">
+                <!-- Изображение -->
+                <a th:href="@{/products/{id}(id=${product.productId})}" class="me-3">
+                    <img src="https://via.placeholder.com/150"
+                         alt="Product Image"
+                         class="img-fluid rounded"
+                         style="width: 100px; height: auto;">
+                </a>
+                <!-- Описание -->
+                <div>
+                    <span class="d-block" th:text="${'Количество: ' + product.quantity}"></span>
+                    <span class="d-block" th:text="${'Цена (шт): '+product.price+'₽'}"></span>
+                </div>
+
+            </div>
+        </div>
+        <!-- Общая сумма -->
+        <p class="fw-bold mt-3" th:text="${'Общая сумма: ' + order.totalPrice + ' ₽.'}"></p>
+    </div>
+</div>
+
+
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

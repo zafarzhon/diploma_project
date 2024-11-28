@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/head}"></div>
+<body>
+<div th:replace="~{fragments/header}"></div>
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Фото товара -->
+        <div class="col-md-4">
+            <img src="https://via.placeholder.com/150" alt="Product Image" class="img-fluid">
+        </div>
+
+        <!-- Основная информация о товаре -->
+        <div class="col-md-8">
+            <h6 class="mt-auto" th:text="${product.fullName}"></h6>
+
+            <!-- Значок скидки, отображается в верхнем правом углу, если есть скидка -->
+            <span th:if="${product.discount > 0}"
+                  class="badge bg-danger position-absolute top-0 end-0 rounded-pill"
+                  th:text="${'-' + product.discount + '%'}">
+                            </span>
+
+            <!-- Блок с ценами для выравнивания -->
+            <div class="mt-auto">
+                <!-- Если есть скидка, показывается PriceWithDiscount, а PriceExDiscount зачёркнут -->
+                <span th:if="${product.discount > 0}" class="product-price fw-bold text-primary mb-0"
+                      th:text="${product.priceWithDiscount + ' ₽'}">
+                            </span>
+                <span th:if="${product.discount > 0}"
+                      class="text-muted text-decoration-line-through mb-0"
+                      th:text="${product.priceExDiscount + ' ₽'}">
+                            </span>
+
+                <!-- Если скидки нет, показывается только PriceExDiscount без зачёркивания -->
+                <p th:if="${product.discount == 0}" class="fw-bold text-primary mb-0"
+                   th:text="${product.priceExDiscount + ' ₽'}">
+                </p>
+            </div>
+
+            <!-- Количество товара и кнопки " + " и " - " -->
+            <div class="mt-3 d-none" th:id="'quantity-container-' + ${product.id}">
+                <button class="decrement-btn btn btn-sm btn-outline-secondary"
+                        th:data-id="${product.id}">-
+                </button>
+                <span th:id="'quantity-' + ${product.id}" class="mx-2" th:text="0">0</span>
+                <button class="increment-btn btn btn-sm btn-outline-secondary" th:data-id="${product.id}"
+                        th:data-stock="${product.count}">+
+                </button>
+            </div>
+
+            <!-- Кнопка "В корзину", изначально отображается -->
+            <div class="add-to-cart-container mt-3" th:id="'add-to-cart-container-' + ${product.id}">
+                <button class="btn btn-primary btn-sm w-100 add-to-cart-btn"
+                        th:data-id="${product.id}">
+                    В корзину
+                </button>
+            </div>
+
+            <!-- Кнопка "В корзину" исчезает, когда товар в корзине -->
+            <form class="mt-3 d-none" method="post" th:action="@{/cart/${product.id}}">
+                <button class="btn btn-primary btn-sm w-100">В корзину</button>
+            </form>
+            <!-- Описание товара -->
+            <div class="mt-4">
+                <h5>Описание</h5>
+                <p th:text="${product.description}"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Характеристики товара -->
+    <div class="mt-5">
+        <h5>Характеристики</h5>
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td>Тип</td>
+                <td th:text="${product.type}"></td>
+            </tr>
+            <tr>
+                <td>Производитель</td>
+                <td th:text="${product.brand}"></td>
+            </tr>
+            <tr>
+                <td>Модель</td>
+                <td th:text="${product.model}"></td>
+            </tr>
+            <tr>
+                <td>Цвет</td>
+                <td th:text="${product.color}"></td>
+            </tr>
+            <tr>
+                <td>Модель процессора</td>
+                <td th:text="${product.cpu.model}"></td>
+            </tr>
+            <tr>
+                <td>Количество ядер</td>
+                <td th:text="${product.cpu.cores}"></td>
+            </tr>
+            <tr>
+                <td>Объем оперативной памяти</td>
+                <td th:text="${product.memory.ram}"></td>
+            </tr>
+            <tr>
+                <td>Тип оперативной памяти</td>
+                <td th:text="${product.memory.ramType}"></td>
+            </tr>
+            <tr>
+                <td>Объем встроенной памяти</td>
+                <td th:text="${product.memory.rom}"></td>
+            </tr>
+            <tr>
+                <td>Тип встроенной памяти</td>
+                <td th:text="${product.memory.romType}"></td>
+            </tr>
+            <tr>
+                <td>Диагональ экрана (дюйм)</td>
+                <td th:text="${product.display.diagonal}"></td>
+            </tr>
+            <tr>
+                <td>Частота обновления экрана</td>
+                <td th:text="${product.display.refreshRate}"></td>
+            </tr>
+            <tr>
+                <td>Технология изготовления матрицы</td>
+                <td th:text="${product.display.type}"></td>
+            </tr>
+            <tr>
+                <td>Разрешение экрана</td>
+                <td th:text="${product.display.resolution}"></td>
+            </tr>
+            <tr>
+                <td>Емкость аккумулятора</td>
+                <td th:text="${product.battery.capacity}"></td>
+            </tr>
+            <tr>
+                <td>Выходная мощность ЗУ</td>
+                <td th:text="${product.battery.maxChargePower}"></td>
+            </tr>
+            <tr>
+                <td>Быстрая зарядка</td>
+                <td th:text="${product.battery.hasFastCharge}"></td>
+            </tr>
+            <tr>
+                <td>Поддержка беспроводной реверсивной зарядки</td>
+                <td th:text="${product.battery.hasReverseCharge}"></td>
+            </tr>
+            <tr>
+                <td>Поддержка беспроводной зарядки</td>
+                <td th:text="${product.battery.hasWirelessCharge}"></td>
+            </tr>
+            <tr>
+                <td>Операционная система</td>
+                <td th:text="${product.operationSystem}"></td>
+            </tr>
+            <tr>
+                <td>Слот для карты памяти</td>
+                <td th:text="${product.hasExMemoryCardSlot}"></td>
+            </tr>
+            <tr>
+                <td>Количество физических SIM-карт</td>
+                <td th:text="${product.countSimCards}"></td>
+            </tr>
+            <tr>
+                <td>Количество основных (тыловых) камер</td>
+                <td th:text="${product.countMainCamera}"></td>
+            </tr>
+            <tr>
+                <td>eSIM</td>
+                <td th:text="${product.esimSupport}"></td>
+            </tr>
+            <tr>
+                <td>Количество мегапикселей основной камеры</td>
+                <td th:text="${product.mainCameraResolution}"></td>
+            </tr>
+            <tr>
+                <td>NFC</td>
+                <td th:text="${product.hasNFC}"></td>
+            </tr>
+            <tr>
+                <td>Версия Bluetooth</td>
+                <td th:text="${product.bluetooth}"></td>
+            </tr>
+            <tr>
+                <td>Стандарт Wi-Fi</td>
+                <td th:text="${product.wifi}"></td>
+            </tr>
+            <tr>
+                <td>Гарантия продавца</td>
+                <td th:text="${product.warranty}"></td>
+            </tr>
+            <tr>
+                <td>Год релиза</td>
+                <td th:text="${product.releaseYear}"></td>
+            </tr>
+            <tr>
+                <td>Ширина</td>
+                <td th:text="${product.width}"></td>
+            </tr>
+            <tr>
+                <td>Высота</td>
+                <td th:text="${product.height}"></td>
+            </tr>
+            <tr>
+                <td>Толщина</td>
+                <td th:text="${product.thickness}"></td>
+            </tr>
+            <tr>
+                <td>Вес</td>
+                <td th:text="${product.weight}"></td>
+            </tr>
+            <tr>
+                <td>Страна-производитель</td>
+                <td th:text="${product.country}"></td>
+            </tr>
+            <tr>
+                <td>Мобильная связь</td>
+                <td th:text="${product.communicationStandard}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

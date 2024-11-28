@@ -1,0 +1,20 @@
+<!-- Sidebar for filters -->
+<div th:fragment="filter" class="col-md-3 filter-section">
+    <h5>Фильтры</h5>
+    <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="" id="inStock">
+        <label class="form-check-label" for="inStock">В наличии</label>
+    </div>
+    <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="" id="rating4">
+        <label class="form-check-label" for="rating4">Рейтинг 4 и выше</label>
+    </div>
+    <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="" id="reliable">
+        <label class="form-check-label" for="reliable">Надёжные модели</label>
+    </div>
+    <!-- Price Range Filter -->
+    <h6 class="mt-4">Цена</h6>
+    <input type="number" class="form-control mb-2" placeholder="от">
+    <input type="number" class="form-control mb-2" placeholder="до">
+</div>

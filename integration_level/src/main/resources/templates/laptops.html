@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/head}"></div>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header}"></div>
+
+<div class="container my-5 main">
+    <div class="row">
+        <!-- Sidebar for filters -->
+        <div th:replace="~{fragments/filter}"></div>
+
+        <!-- Product Listings -->
+        <div class="col-md-9">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+
+                <div class="col" th:each="product : ${products}" th:id="'product-' + ${product.id}">
+
+                    <div class="product-card border p-3 d-flex flex-column h-100 position-relative">
+                        <a th:href="@{/products/{id}(id=${product.id})}"
+                           class="text-decoration-none text-dark h-100 d-flex flex-column">
+                            <img src="https://via.placeholder.com/150" alt="Laptop Image"
+                                 class="product-image w-100">
+
+                            <h6 class="mt-auto" th:text="${product.fullName}"></h6>
+
+                            <!-- Значок скидки, отображается в верхнем правом углу, если есть скидка -->
+                            <span th:if="${product.discount > 0}"
+                                  class="badge bg-danger position-absolute top-0 end-0 rounded-pill"
+                                  th:text="${'-' + product.discount + '%'}">
+                        </span>
+                        </a>
+                        <!-- Блок с ценами для выравнивания -->
+                        <div class="mt-auto">
+                            <!-- Если есть скидка, показывается PriceWithDiscount, а PriceExDiscount зачёркнут -->
+                            <span th:if="${product.discount > 0}" class="product-price fw-bold text-primary mb-0"
+                                  th:text="${product.priceWithDiscount + ' ₽'}">
+                            </span>
+                            <span th:if="${product.discount > 0}"
+                                  class="text-muted text-decoration-line-through mb-0"
+                                  th:text="${product.priceExDiscount + ' ₽'}">
+                            </span>
+
+                            <!-- Если скидки нет, показывается только PriceExDiscount без зачёркивания -->
+                            <p th:if="${product.discount == 0}" class="fw-bold text-primary mb-0"
+                               th:text="${product.priceExDiscount + ' ₽'}">
+                            </p>
+                        </div>
+
+                        <!-- Количество товара и кнопки " + " и " - " -->
+                        <div class="mt-3 d-none" th:id="'quantity-container-' + ${product.id}">
+                            <button class="decrement-btn btn btn-sm btn-outline-secondary"
+                                    th:data-id="${product.id}">-
+                            </button>
+                            <span th:id="'quantity-' + ${product.id}" class="mx-2" th:text="0">0</span>
+                            <button class="increment-btn btn btn-sm btn-outline-secondary" th:data-id="${product.id}"
+                                    th:data-stock="${product.count}">+
+                            </button>
+                        </div>
+
+                        <!-- Кнопка "В корзину", изначально отображается -->
+                        <div class="add-to-cart-container mt-3" th:id="'add-to-cart-container-' + ${product.id}">
+                            <button class="btn btn-primary btn-sm w-100 add-to-cart-btn"
+                                    th:data-id="${product.id}">
+                                В корзину
+                            </button>
+                        </div>
+
+                        <!-- Кнопка "В корзину" исчезает, когда товар в корзине -->
+                        <form class="mt-3 d-none" method="post" th:action="@{/cart/${product.id}}">
+                            <button class="btn btn-primary btn-sm w-100">В корзину</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+</body>
+</html>
+
